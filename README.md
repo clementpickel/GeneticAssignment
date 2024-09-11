@@ -11,7 +11,12 @@ This project implements a genetic algorithm to solve various problems such as th
 To run the genetic algorithm:
 
 ```bash
-python3 main.py
+python3 main.py -h
+python3 main.py B Q S L
+        B = board width
+        Q = number of queens
+        S = size of the population
+        L = generation limit
 ```
 
 ## Problem Details

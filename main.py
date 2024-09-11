@@ -1,6 +1,9 @@
+#!/usr/bin/python3
+
 from typing import List, Callable, Tuple
 from random import choices, randint, randrange, random, shuffle
 from functools import partial
+from sys import argv
 
 Genome = List[int]
 Population = List[Genome]
@@ -109,26 +112,42 @@ def show_board(genome: Genome, board_size: int):
             print(char, end=" ")
         print("")
 
-board_width = 8
-queens_number = 8
-size = 100
-generation_limit = 300
+def show_result(genome: Genome, generation: int, board_width: int, queens_number: int):
+    print("result =", genome)
+    print("generation =", generation)
+    show_board(genome, board_width)
+    if fitness(genome) != queens_number * (queens_number + 1) / 2:
+        print("Not a solution, limit reached")
 
-population, generations = run_evolution(
-    populate_func=partial(
-        generate_population, size = size, genome_length = queens_number * 2, min = 0, max = board_width
-    ),
-    fitness_func=fitness,
-    fitness_limit=queens_number * (queens_number + 1) / 2, # summ from 0 to queens_number,
-    mutation_func=partial(
-        mutation, min = 0, max = board_width - 1
-    ),
-    generation_limit=generation_limit
-)
+def help():
+    print("""python3 main.py B Q S L
+          B = board width
+          Q = number of queens
+          S = size of the population
+          L = generation limit
+""")
 
+def main():
+    if (len(argv) == 2 and argv[1] == "-h" or len(argv) != 5):
+        help()
+        return
+    board_width = int(argv[1])
+    queens_number = int(argv[2])
+    size = int(argv[3])
+    generation_limit = int(argv[4])
 
-print("result =", population[0])
-print("generation =", generations)
-show_board(population[0], board_width)
-if fitness(population[0]) == queens_number * (queens_number + 1) / 2:
-    print("not a solution, limit reached")
+    population, generations = run_evolution(
+        populate_func=partial(
+            generate_population, size = size, genome_length = queens_number * 2, min = 0, max = board_width
+        ),
+        fitness_func=fitness,
+        fitness_limit=queens_number * (queens_number + 1) / 2, # summ from 0 to queens_number,
+        mutation_func=partial(
+            mutation, min = 0, max = board_width - 1
+        ),
+        generation_limit=generation_limit
+    )
+    show_result(population[0], generations, board_width, queens_number)
+    return
+
+main()
