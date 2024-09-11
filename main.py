@@ -16,7 +16,6 @@ def generate_genome(length: int, min: int, max: int) -> Genome:
 def generate_population(size: int, genome_length: int, min: int, max: int) -> Population:
     return  [generate_genome(genome_length, min, max) for _ in range(size)]
 
-# can probably be upgraded
 def fitness(genome: Genome) -> int:
     if len(genome)%2 != 0:
         raise ValueError("genome must be [X,Y, ...]")
@@ -39,7 +38,6 @@ def fitness(genome: Genome) -> int:
     return score / 2
             
 def selection_pair(population, fitness_func: FitnessFunc) -> Population:
-    # print([fitness_func(genome) for genome in population])
     return choices(
         population=population,
         weights=[fitness_func(genome) for genome in population],
@@ -61,10 +59,6 @@ def mutation(genome: Genome, min: int, max: int, num: int = 1, probability: floa
         index = randrange(len(genome))
         if random() < probability:
             genome[index] = randint(min, max-1)
-            # if random() < 0.5 and genome[index] < max-1:
-            #     genome[index] += 1
-            # elif genome[index] > min:
-            #     genome[index] -=1
     return genome
 
 def run_evolution(
