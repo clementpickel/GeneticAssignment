@@ -33,6 +33,9 @@ def fitness(genome: Genome) -> int:
             if i != j:
                 q1 = queens_co[i]
                 q2 = queens_co[j]
+                if q1[0] == q2[0] and q2[0] == q1[0]:
+                    score -= 2
+                    break
                 # print(q1, q2)
                 if q1[0] == q2[0]:
                     score -= 1
@@ -47,7 +50,9 @@ def fitness(genome: Genome) -> int:
                     score -= 1
                     break
     # print(score)
-    return score
+    if score > 0:
+        return score
+    return 0
             
 def selection_pair(population, fitness_func: FitnessFunc) -> Population:
     # print([fitness_func(genome) for genome in population])
@@ -62,7 +67,9 @@ def single_point_crossover(a: Genome, b: Genome) -> Tuple[Genome, Genome]:
         raise ValueError("Genome a and b must be of same length")
     
     length = len(a)
-    p = randint(1, length - 1)
+    p = randint(2, length - 2)
+    if p % 2 != 0: # only cut so to leave X,Y together
+        p -= 1
     return a[0:p] + b[p:], b[0:p] + a[p:]
 
 def mutation(genome: Genome, min: int, max: int, num: int = 1, probability: float = 0.5) -> Genome:
@@ -125,7 +132,7 @@ def show_board(genome: Genome, board_size: int):
 
 board_width = 8
 queens_number = 8
-size = 20
+size = 50
 generation_limit = 100
 
 population, generations = run_evolution(
@@ -143,3 +150,4 @@ population, generations = run_evolution(
 
 print("res =", population[0], generations)
 show_board(population[0], board_width)
+print(fitness(population[0]))
