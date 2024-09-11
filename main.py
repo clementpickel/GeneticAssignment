@@ -11,44 +11,52 @@ CrossoverFunc = Callable[[Genome, Genome], Tuple[Genome, Genome]]
 MutationFunc = Callable[[Genome], Genome]
 
 def generate_genome(length: int, min: int, max: int) -> Genome:
-    genome = [1] * queens_number + [0] * (length - queens_number)
-    shuffle(genome)
-    return genome
-
-def generate_population(size: int, genome_length: int, queens_number: int) -> Population:
-    return [generate_genome(genome_length, queens_number) for _ in range(size)]
+    return [randint(min, max-1) for _ in range(length)]
+    
+def generate_population(size: int, genome_length: int, min: int, max: int) -> Population:
+    return  [generate_genome(genome_length, min, max) for _ in range(size)]
 
 # can probably be upgraded
-def fitness(genome: Genome, board_size: int) -> int:
-    if len(genome) != board_size:
-        raise ValueError("genome and board must be of the same length")
-
+def fitness(genome: Genome) -> int:
+    if len(genome)%2 != 0:
+        raise ValueError("genome must be [X,Y, ...]")
+    
     queens_co = []
-    score = genome.count(1)
-    for i in range(len(genome)):
-        if genome[i] == 1:
-            queens_co.append((i % board_size, int(i / board_size)))
+    score = len(genome) / 2
+    for i in range(0, len(genome), 2):
+        queens_co.append([genome[i], genome[i+1]])
 
-    for q1 in queens_co:
-        for q2 in queens_co:
-            if q1[0] == q2[0]:
-                score -= 1
-            elif q1[1] == q2[1]:
-                score -= 1
-            elif q2[1] - q1[1] == q2[0] - q1[0]:
-                score -= 1
-            elif q2[1] - q1[1] == q1[0] - q2[0]:
-                score -= 1
+    # print(genome)
+    # print(queens_co)
+    for i in range(len(queens_co)):
+        for j in range(len(queens_co)):
+            if i != j:
+                q1 = queens_co[i]
+                q2 = queens_co[j]
+                # print(q1, q2)
+                if q1[0] == q2[0]:
+                    score -= 1
+                    break
+                elif q1[1] == q2[1]:
+                    score -= 1
+                    break
+                elif q2[1] - q1[1] == q2[0] - q1[0]:
+                    score -= 1
+                    break
+                elif q2[1] - q1[1] == q1[0] - q2[0]:
+                    score -= 1
+                    break
+    # print(score)
     return score
             
 def selection_pair(population, fitness_func: FitnessFunc) -> Population:
+    # print([fitness_func(genome) for genome in population])
     return choices(
         population=population,
         weights=[fitness_func(genome) for genome in population],
         k=2
     )
 
-# need modification, need to remove a queen for every queen added
 def single_point_crossover(a: Genome, b: Genome) -> Tuple[Genome, Genome]:
     if len(a) != len(b):
         raise ValueError("Genome a and b must be of same length")
@@ -57,11 +65,14 @@ def single_point_crossover(a: Genome, b: Genome) -> Tuple[Genome, Genome]:
     p = randint(1, length - 1)
     return a[0:p] + b[p:], b[0:p] + a[p:]
 
-# need modifications, need to remove a queen for every queen added
-def mutation(genome: Genome, num: int = 1, probability: float = 0.5) -> Genome:
+def mutation(genome: Genome, min: int, max: int, num: int = 1, probability: float = 0.5) -> Genome:
     for _ in range(num):
         index = randrange(len(genome))
-        genome[index] = genome[index] if random() > probability else abs(genome[index] - 1)
+        if random() < probability:
+            if random() < 0.5 and genome[index] < max-1:
+                genome[index] += 1
+            elif genome[index] > min:
+                genome[index] -=1
     return genome
 
 def run_evolution(
@@ -84,7 +95,7 @@ def run_evolution(
         if fitness_func(population[0]) >= fitness_limit: # we calculate 2 time the fitness function of the best, can be improved
             break
 
-        next_generation = population[0, 2] # elitism
+        next_generation = [population[0], population[1]] # elitism
 
         for _ in range(int(len(population) / 2) - 1):
             parent = selection_func(population, fitness_func)
@@ -103,17 +114,32 @@ def run_evolution(
 
     return population, i
 
+def show_board(genome: Genome, board_size: int):
+    board = [['_' for _ in range(board_size)]for _ in range(board_size)]
+    for i in range(0, len(genome), 2):
+        board[genome[i+1]][genome[i]] = 'Q'
+    for line in board:
+        for char in line:
+            print(char, end=" ")
+        print("")
 
-board_width = 4
-queens_number = 4
+board_width = 8
+queens_number = 8
+size = 20
+generation_limit = 100
+
 population, generations = run_evolution(
     populate_func=partial(
-        generate_population, size = 20, genome_length = queens_number * 2, queens_number = queens_number
+        generate_population, size = size, genome_length = queens_number * 2, min = 0, max = board_width
     ),
-    fitness_func=partial(
-        fitness, board_size = board_width**2
+    fitness_func=fitness,
+    fitness_limit=queens_number,
+    mutation_func=partial(
+        mutation, min = 0, max = board_width - 1
     ),
-    fitness_limit=queens_number
+    generation_limit=generation_limit
 )
 
-print(population[0], generations)
+
+print("res =", population[0], generations)
+show_board(population[0], board_width)

@@ -1,6 +1,7 @@
 # GeneticAssignment
 
 Create a genetic algorithm to solve the n-queens / TSP / any problem we want.
+genome representation = [X,Y x the number of queens]
 
 github:
 https://github.com/clementpickel/GeneticAssignment
