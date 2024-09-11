@@ -22,12 +22,10 @@ def fitness(genome: Genome) -> int:
         raise ValueError("genome must be [X,Y, ...]")
     
     queens_co = []
-    score = len(genome) / 2
+    score = len(genome)
     for i in range(0, len(genome), 2):
         queens_co.append([genome[i], genome[i+1]])
 
-    # print(genome)
-    # print(queens_co)
     for i in range(len(queens_co)):
         for j in range(len(queens_co)):
             if i != j:
@@ -35,24 +33,10 @@ def fitness(genome: Genome) -> int:
                 q2 = queens_co[j]
                 if q1[0] == q2[0] and q2[0] == q1[0]:
                     score -= 2
-                    break
-                # print(q1, q2)
-                if q1[0] == q2[0]:
-                    score -= 1
-                    break
-                elif q1[1] == q2[1]:
-                    score -= 1
-                    break
-                elif q2[1] - q1[1] == q2[0] - q1[0]:
-                    score -= 1
-                    break
-                elif q2[1] - q1[1] == q1[0] - q2[0]:
-                    score -= 1
-                    break
-    # print(score)
-    if score > 0:
-        return score
-    return 0
+
+                if q1[0] != q2[0] and q1[1] != q2[1] and q2[1] - q1[1] != q2[0] - q1[0] and q2[1] - q1[1] != q1[0] - q2[0]:
+                    score += 1
+    return score / 2
             
 def selection_pair(population, fitness_func: FitnessFunc) -> Population:
     # print([fitness_func(genome) for genome in population])
@@ -76,10 +60,11 @@ def mutation(genome: Genome, min: int, max: int, num: int = 1, probability: floa
     for _ in range(num):
         index = randrange(len(genome))
         if random() < probability:
-            if random() < 0.5 and genome[index] < max-1:
-                genome[index] += 1
-            elif genome[index] > min:
-                genome[index] -=1
+            genome[index] = randint(min, max-1)
+            # if random() < 0.5 and genome[index] < max-1:
+            #     genome[index] += 1
+            # elif genome[index] > min:
+            #     genome[index] -=1
     return genome
 
 def run_evolution(
@@ -99,7 +84,7 @@ def run_evolution(
             key=lambda genome: fitness_func(genome),
             reverse=True
         )
-        if fitness_func(population[0]) >= fitness_limit: # we calculate 2 time the fitness function of the best, can be improved
+        if fitness_func(population[0]) >= fitness_limit:
             break
 
         next_generation = [population[0], population[1]] # elitism
@@ -132,15 +117,15 @@ def show_board(genome: Genome, board_size: int):
 
 board_width = 8
 queens_number = 8
-size = 50
-generation_limit = 100
+size = 100
+generation_limit = 300
 
 population, generations = run_evolution(
     populate_func=partial(
         generate_population, size = size, genome_length = queens_number * 2, min = 0, max = board_width
     ),
     fitness_func=fitness,
-    fitness_limit=queens_number,
+    fitness_limit=queens_number * (queens_number + 1) / 2, # summ from 0 to queens_number,
     mutation_func=partial(
         mutation, min = 0, max = board_width - 1
     ),
@@ -148,6 +133,8 @@ population, generations = run_evolution(
 )
 
 
-print("res =", population[0], generations)
+print("result =", population[0])
+print("generation =", generations)
 show_board(population[0], board_width)
-print(fitness(population[0]))
+if fitness(population[0]) == queens_number * (queens_number + 1) / 2:
+    print("not a solution, limit reached")

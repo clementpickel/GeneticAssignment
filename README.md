@@ -15,3 +15,5 @@ https://www.educative.io/answers/solving-the-8-queen-problem-using-genetic-algor
 steps:
 change genome from position in the board in binary to position X, Y
 the genetic algorithm converge to a solution with 2 pieces or more at the same place to remove a queen
+we change the fitness function from counting the number of non attacking queen to non attacking pair
+we change the mutation from +/- 1 to a random between 0 and board_size
