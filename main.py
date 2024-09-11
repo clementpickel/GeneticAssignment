@@ -10,7 +10,7 @@ SelectionFunc = Callable[[Population, FitnessFunc], Tuple[Genome, Genome]]
 CrossoverFunc = Callable[[Genome, Genome], Tuple[Genome, Genome]]
 MutationFunc = Callable[[Genome], Genome]
 
-def generate_genome(length: int, queens_number: int) -> Genome:
+def generate_genome(length: int, min: int, max: int) -> Genome:
     genome = [1] * queens_number + [0] * (length - queens_number)
     shuffle(genome)
     return genome
@@ -108,7 +108,7 @@ board_width = 4
 queens_number = 4
 population, generations = run_evolution(
     populate_func=partial(
-        generate_population, size = 20, genome_length = board_width**2, queens_number = queens_number
+        generate_population, size = 20, genome_length = queens_number * 2, queens_number = queens_number
     ),
     fitness_func=partial(
         fitness, board_size = board_width**2
