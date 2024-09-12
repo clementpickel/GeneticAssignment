@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from typing import List, Callable, Tuple
-from random import choices, randint, randrange, random, shuffle
+from random import choices, randint, randrange, random
 from functools import partial
 from sys import argv
 
@@ -119,6 +119,13 @@ def show_result(genome: Genome, generation: int, board_width: int, queens_number
     if fitness(genome) != queens_number * (queens_number + 1) / 2:
         print("Not a solution, limit reached")
 
+def is_num(str):
+    try:
+        int(str)
+    except ValueError:
+        exit(84)
+    return int(str)
+
 def help():
     print("""python3 main.py B Q S L
           B = board width
@@ -131,10 +138,10 @@ def main():
     if (len(argv) == 2 and argv[1] == "-h" or len(argv) != 5):
         help()
         return
-    board_width = int(argv[1])
-    queens_number = int(argv[2])
-    size = int(argv[3])
-    generation_limit = int(argv[4])
+    board_width = is_num(argv[1])
+    queens_number = is_num(argv[2])
+    size = is_num(argv[3])
+    generation_limit = is_num(argv[4])
 
     population, generations = run_evolution(
         populate_func=partial(
