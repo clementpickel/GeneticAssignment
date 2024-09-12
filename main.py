@@ -24,21 +24,22 @@ def fitness(genome: Genome) -> int:
         raise ValueError("genome must be [X,Y, ...]")
     
     queens_co = []
-    score = len(genome)
+    score = 0
+
     for i in range(0, len(genome), 2):
         queens_co.append([genome[i], genome[i+1]])
 
     for i in range(len(queens_co)):
-        for j in range(len(queens_co)):
-            if i != j:
+        for j in range(i + 1, len(queens_co)):
+            # if i != j:
                 q1 = queens_co[i]
                 q2 = queens_co[j]
-                if q1[0] == q2[0] and q2[0] == q1[0]:
+                if q1[0] == q2[0] and q2[0] == q1[0]: # decrease score if 2 queens have the same coordinates
                     score -= 2
 
-                if q1[0] != q2[0] and q1[1] != q2[1] and q2[1] - q1[1] != q2[0] - q1[0] and q2[1] - q1[1] != q1[0] - q2[0]:
+                if q1[0] != q2[0] and q1[1] != q2[1] and q2[1] - q1[1] != q2[0] - q1[0] and q2[1] - q1[1] != q1[0] - q2[0]: # check vertical, horizontal and diagonals
                     score += 1
-    return score / 2
+    return score
             
 def selection_pair(population, fitness_func: FitnessFunc) -> Population:
     return choices(
@@ -116,8 +117,8 @@ def show_result(genome: Genome, generation: int, board_width: int, queens_number
     print("result =", genome)
     print("generation =", generation)
     show_board(genome, board_width)
-    if fitness(genome) != queens_number * (queens_number + 1) / 2:
-        print("Not a solution, limit reached")
+    if fitness(genome) != queens_number * (queens_number - 1) / 2:
+        print("Not a solution, generatoion limit reached")
 
 def is_num(str):
     try:
@@ -148,7 +149,7 @@ def main():
             generate_population, size = size, genome_length = queens_number * 2, min = 0, max = board_width
         ),
         fitness_func=fitness,
-        fitness_limit=queens_number * (queens_number + 1) / 2, # summ from 0 to queens_number,
+        fitness_limit=queens_number * (queens_number - 1) / 2, # summ from 0 to queens_number,
         mutation_func=partial(
             mutation, min = 0, max = board_width - 1
         ),
