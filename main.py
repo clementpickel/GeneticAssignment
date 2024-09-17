@@ -1,9 +1,9 @@
 #!/usr/bin/python3
 
 from typing import List, Callable, Tuple
-from random import choices, randint, randrange, random
+from random import choices, randint, randrange, random, choice
 from functools import partial
-from sys import argv
+from sys import argv, stderr
 
 Genome = List[int]
 Population = List[Genome]
@@ -15,7 +15,21 @@ MutationFunc = Callable[[Genome], Genome]
 
 def generate_genome(length: int, min: int, max: int) -> Genome:
     return [randint(min, max-1) for _ in range(length)]
-    
+
+# # add constraint based initialisation but it kinda defeat the point so idk if i should use it
+# def generate_genome(length: int, min: int, max: int) -> Genome:
+#     res = []
+#     already_used_x = []
+#     for _ in range(int(length / 2)):
+#         allowed_numbers_x = [i for i in range(min, max) if i not in already_used_x]
+#         x = choice(allowed_numbers_x)
+
+#         already_used_x.append(x)
+#         res.append(x)
+#         res.append(randint(min, max-1))
+        
+#     return res
+
 def generate_population(size: int, genome_length: int, min: int, max: int) -> Population:
     return  [generate_genome(genome_length, min, max) for _ in range(size)]
 
@@ -23,22 +37,18 @@ def fitness(genome: Genome) -> int:
     if len(genome)%2 != 0:
         raise ValueError("genome must be [X,Y, ...]")
     
-    queens_co = []
     score = 0
 
     for i in range(0, len(genome), 2):
-        queens_co.append([genome[i], genome[i+1]])
+        for j in range(i + 2, len(genome), 2):
+            q1 = (genome[i], genome[i+1])
+            q2 = (genome[j], genome[j+1])
 
-    for i in range(len(queens_co)):
-        for j in range(i + 1, len(queens_co)):
-            # if i != j:
-                q1 = queens_co[i]
-                q2 = queens_co[j]
-                if q1[0] == q2[0] and q2[0] == q1[0]: # decrease score if 2 queens have the same coordinates
-                    score -= 2
+            if q1[0] == q2[0] and q2[0] == q1[0]: # decrease score if 2 queens have the same coordinates
+                score -= 2
 
-                if q1[0] != q2[0] and q1[1] != q2[1] and q2[1] - q1[1] != q2[0] - q1[0] and q2[1] - q1[1] != q1[0] - q2[0]: # check vertical, horizontal and diagonals
-                    score += 1
+            if q1[0] != q2[0] and q1[1] != q2[1] and q2[1] - q1[1] != q2[0] - q1[0] and q2[1] - q1[1] != q1[0] - q2[0]: # check vertical, horizontal and diagonals
+                score += 1
     return score
             
 def selection_pair(population, fitness_func: FitnessFunc) -> Population:
@@ -58,7 +68,7 @@ def single_point_crossover(a: Genome, b: Genome) -> Tuple[Genome, Genome]:
         p -= 1
     return a[0:p] + b[p:], b[0:p] + a[p:]
 
-def mutation(genome: Genome, min: int, max: int, num: int = 1, probability: float = 0.5) -> Genome:
+def mutation(genome: Genome, min: int, max: int, num: int = 1, probability: float = 0.10) -> Genome:
     for _ in range(num):
         index = randrange(len(genome))
         if random() < probability:
@@ -118,7 +128,7 @@ def show_result(genome: Genome, generation: int, board_width: int, queens_number
     print("generation =", generation)
     show_board(genome, board_width)
     if fitness(genome) != queens_number * (queens_number - 1) / 2:
-        print("Not a solution, generatoion limit reached")
+        print("Not a solution, generation limit reached")
 
 def is_num(str):
     try:
@@ -128,12 +138,27 @@ def is_num(str):
     return int(str)
 
 def help():
-    print("""python3 main.py B Q S L
+    print("""python3 main.py B Q P L
           B = board width
           Q = number of queens
-          S = size of the population
-          L = generation limit
-""")
+          P = size of the population
+          L = generation limit""")
+    
+def input_check(board_width: int, queens_number: int, population: int, gen_lim: int):
+    if board_width < 1:
+        print("Board too small", file=stderr)
+        exit(84)
+    if queens_number < 1:
+        print("Not enough queens", file=stderr)
+        exit(84)
+    if population < 2:
+        print("Population too small", file=stderr)
+        exit(84)
+    if gen_lim < 1:
+        print("Not enough generations", file=stderr)
+        exit(84)
+    if queens_number > board_width:
+        print("I mean.. you can try...")
 
 def main():
     if (len(argv) == 2 and argv[1] == "-h" or len(argv) != 5):
@@ -143,6 +168,8 @@ def main():
     queens_number = is_num(argv[2])
     size = is_num(argv[3])
     generation_limit = is_num(argv[4])
+
+    input_check(board_width, queens_number, size, generation_limit)
 
     population, generations = run_evolution(
         populate_func=partial(

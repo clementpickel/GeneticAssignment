@@ -12,10 +12,10 @@ To run the genetic algorithm:
 
 ```bash
 python3 main.py -h
-python3 main.py B Q S L
+python3 main.py B Q P L
         B = board width
         Q = number of queens
-        S = size of the population
+        P = size of the population
         L = generation limit
 ```
 
@@ -45,9 +45,9 @@ For the N-Queens problem, each genome is represented as a list of `[X, Y]` pairs
 
 ## Sources
 
-- [Genetic Algorithm for the N-Queens Problem](https://www.youtube.com/watch?v=uQj5UNhCPuo)
-- [Genetic Algorithm Implementation](https://www.youtube.com/watch?v=nhT56blfRpE)
-- [Checking for horizontal, vertical, and diagonal pairs](https://stackoverflow.com/questions/41432956/checking-for-horizontal-vertical-and-diagonal-pairs-given-coordinates)
+- [Genetic Algorithms Explained By Example](https://www.youtube.com/watch?v=uQj5UNhCPuo)
+- [Genetic Algorithm from Scratch in Python (tutorial with code)](https://www.youtube.com/watch?v=nhT56blfRpE)
+- [Checking for horizontal, vertical and diagonal pairs given coordinates](https://stackoverflow.com/questions/41432956/checking-for-horizontal-vertical-and-diagonal-pairs-given-coordinates)
 - [Solving the 8-Queens Problem using Genetic Algorithm](https://www.educative.io/answers/solving-the-8-queen-problem-using-genetic-algorithm)
 
 ## Steps Taken
