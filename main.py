@@ -13,22 +13,26 @@ SelectionFunc = Callable[[Population, FitnessFunc], Tuple[Genome, Genome]]
 CrossoverFunc = Callable[[Genome, Genome], Tuple[Genome, Genome]]
 MutationFunc = Callable[[Genome], Genome]
 
-def generate_genome(length: int, min: int, max: int) -> Genome:
-    return [randint(min, max-1) for _ in range(length)]
-
-# # add constraint based initialisation but it kinda defeat the point so idk if i should use it
 # def generate_genome(length: int, min: int, max: int) -> Genome:
-#     res = []
-#     already_used_x = []
-#     for _ in range(int(length / 2)):
-#         allowed_numbers_x = [i for i in range(min, max) if i not in already_used_x]
-#         x = choice(allowed_numbers_x)
+#     return [randint(min, max-1) for _ in range(length)]
 
-#         already_used_x.append(x)
-#         res.append(x)
-#         res.append(randint(min, max-1))
+# add constraint based initialisation but it kinda defeat the point so idk if i should use it
+def generate_genome(length: int, min: int, max: int) -> Genome:
+    res = []
+    already_used_x = []
+    already_used_y = []
+    for _ in range(int(length / 2)):
+        allowed_numbers_x = [i for i in range(min, max) if i not in already_used_x]
+        allowed_numbers_y = [i for i in range(min, max) if i not in already_used_y]
+        x = choice(allowed_numbers_x)
+        y = choice(allowed_numbers_y)
+
+        already_used_x.append(x)
+        already_used_y.append(y)
+        res.append(x)
+        res.append(y)
         
-#     return res
+    return res
 
 def generate_population(size: int, genome_length: int, min: int, max: int) -> Population:
     return  [generate_genome(genome_length, min, max) for _ in range(size)]
@@ -44,7 +48,7 @@ def fitness(genome: Genome) -> int:
             q1 = (genome[i], genome[i+1])
             q2 = (genome[j], genome[j+1])
 
-            if q1[0] == q2[0] and q2[0] == q1[0]: # decrease score if 2 queens have the same coordinates
+            if q1[0] == q2[0] and q1[1] == q2[1]: # decrease score if 2 queens have the same coordinates
                 score -= 2
 
             if q1[0] != q2[0] and q1[1] != q2[1] and q2[1] - q1[1] != q2[0] - q1[0] and q2[1] - q1[1] != q1[0] - q2[0]: # check vertical, horizontal and diagonals
@@ -128,7 +132,7 @@ def show_result(genome: Genome, generation: int, board_width: int, queens_number
     print("generation =", generation)
     show_board(genome, board_width)
     if fitness(genome) != queens_number * (queens_number - 1) / 2:
-        print("Not a solution, generation limit reached")
+        print("Not a solution, generation limit reached, fitness =", fitness(genome), "/", queens_number * (queens_number - 1) / 2)
 
 def is_num(str):
     try:
