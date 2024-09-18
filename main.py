@@ -4,6 +4,7 @@ from typing import List, Callable, Tuple
 from random import choices, randint, randrange, random, choice
 from functools import partial
 from sys import argv
+from time import time
 
 from help import help, show_result, is_num, input_check
 
@@ -59,14 +60,14 @@ def fitness(genome: Genome) -> int:
     score = 0
 
     for i in range(0, len(genome), 2):
+        x1, y1 = genome[i], genome[i + 1]
         for j in range(i + 2, len(genome), 2):
-            q1 = (genome[i], genome[i+1])
-            q2 = (genome[j], genome[j+1])
+            x2, y2 = genome[j], genome[j + 1]
 
-            if q1[0] == q2[0] and q1[1] == q2[1]: # decrease score if 2 queens have the same coordinates
+            if x1 == x2 and y1 == y2: # decrease score if 2 queens have the same coordinates
                 score -= 2
 
-            if q1[0] != q2[0] and q1[1] != q2[1] and q2[1] - q1[1] != q2[0] - q1[0] and q2[1] - q1[1] != q1[0] - q2[0]: # check vertical, horizontal and diagonals
+            if x1 != x2 and y1 != y2 and y2 - y1 != x2 - x1 and y2 - y1 != x1 - x2: # check vertical, horizontal and diagonals
                 score += 1
     return score
             
@@ -155,6 +156,7 @@ def run_evolution(
 
 
 def main():
+    start_time = time()
     if (len(argv) == 2 and argv[1] == "-h" or len(argv) < 5):
         help()
         return
@@ -179,7 +181,8 @@ def main():
         ),
         generation_limit=generation_limit
     )
-    show_result(population[0], generations, board_width, queens_number, fitness(population[0]))
+    elapsed_time = time() - start_time
+    show_result(population[0], generations, board_width, queens_number, fitness(population[0]), elapsed_time)
     return
 
 main()
