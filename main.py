@@ -51,7 +51,7 @@ def generate_genome_3(length: int, min: int, max: int) -> Genome:
     return res
 
 def generate_population(size: int, genome_length: int, min: int, max: int) -> Population:
-    return  [generate_genome_2(genome_length, min, max) for _ in range(size)]
+    return  [generate_genome_3(genome_length, min, max) for _ in range(size)]
 
 def fitness(genome: Genome) -> int:
     if len(genome)%2 != 0:
