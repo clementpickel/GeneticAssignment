@@ -11,7 +11,7 @@ Genome = List[int]
 Population = List[Genome]
 FitnessFunc = Callable[[Genome], int]
 PopulateFunc = Callable[[], Population]
-SelectionFunc = Callable[[Population, FitnessFunc], Tuple[Genome, Genome]]
+SelectionFunc = Callable[[Population], Tuple[Genome, Genome]]
 CrossoverFunc = Callable[[Genome, Genome], Tuple[Genome, Genome]]
 MutationFunc = Callable[[Genome], Genome]
 
@@ -70,12 +70,12 @@ def fitness(genome: Genome) -> int:
                 score += 1
     return score
             
-def selection_pair(population, fitness_func: FitnessFunc) -> Population:
-    return choices(
+def selection_pair(population) -> Population:
+    return get_population(choices(
         population=population,
-        weights=[fitness_func(genome) for genome in population],
+        weights=[genome[1] for genome in population],
         k=2
-    )
+    ))
 
 def single_point_crossover(a: Genome, b: Genome) -> Tuple[Genome, Genome]:
     if len(a) != len(b):
@@ -94,6 +94,25 @@ def mutation(genome: Genome, min: int, max: int, num: int = 1, probability: floa
             genome[index] = randint(min, max-1)
     return genome
 
+def create_fitness(pop: Population):
+    res = []
+    for elem in pop:
+        res.append([elem, fitness(elem)])
+    return res
+
+def sort_fitness(list):
+    return sorted(
+        list,
+        key=lambda elem: elem[1],
+        reverse=True
+    )
+
+def get_population(list):
+    res = []
+    for elem in list:
+        res.append(elem[0])
+    return res
+
 def run_evolution(
       populate_func: PopulateFunc,
       fitness_func: FitnessFunc,
@@ -106,18 +125,16 @@ def run_evolution(
     population = populate_func()
 
     for i in range(generation_limit):
-        population = sorted(
-            population,
-            key=lambda genome: fitness_func(genome),
-            reverse=True
-        )
-        if fitness_func(population[0]) >= fitness_limit:
+        population = create_fitness(population)
+        population = sort_fitness(population)
+        if population[0][1] >= fitness_limit:
+            population = get_population(population)
             break
 
-        next_generation = [population[0], population[1]] # elitism
+        next_generation = [population[0][0], population[1][0]] # elitism
 
         for _ in range(int(len(population) / 2) - 1):
-            parent = selection_func(population, fitness_func)
+            parent = selection_func(population)
             offsping_a, offspring_b = crossover_func(parent[0], parent[1])
             offsping_a = mutation_func(offsping_a)
             offspring_b = mutation_func(offspring_b)
