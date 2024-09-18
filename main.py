@@ -3,7 +3,9 @@
 from typing import List, Callable, Tuple
 from random import choices, randint, randrange, random, choice
 from functools import partial
-from sys import argv, stderr
+from sys import argv
+
+from help import help, show_result, is_num, input_check
 
 Genome = List[int]
 Population = List[Genome]
@@ -13,11 +15,24 @@ SelectionFunc = Callable[[Population, FitnessFunc], Tuple[Genome, Genome]]
 CrossoverFunc = Callable[[Genome, Genome], Tuple[Genome, Genome]]
 MutationFunc = Callable[[Genome], Genome]
 
-# def generate_genome(length: int, min: int, max: int) -> Genome:
-#     return [randint(min, max-1) for _ in range(length)]
+def generate_genome_1(length: int, min: int, max: int) -> Genome:
+    return [randint(min, max-1) for _ in range(length)]
+
+#not 2 quenns on sale position
+def generate_genome_2(length: int, min: int, max: int) -> Genome:
+    already_used = []
+    res = []
+    for _ in range(int(length/2)):
+        new = [randint(min, max-1), randint(min, max-1)]
+        while new in already_used:
+            new = [randint(min, max-1), randint(min, max-1)]
+        already_used.append(new)
+        res.append(new[0])
+        res.append(new[1])
+    return res
 
 # add constraint based initialisation but it kinda defeat the point so idk if i should use it
-def generate_genome(length: int, min: int, max: int) -> Genome:
+def generate_genome_3(length: int, min: int, max: int) -> Genome:
     res = []
     already_used_x = []
     already_used_y = []
@@ -35,7 +50,7 @@ def generate_genome(length: int, min: int, max: int) -> Genome:
     return res
 
 def generate_population(size: int, genome_length: int, min: int, max: int) -> Population:
-    return  [generate_genome(genome_length, min, max) for _ in range(size)]
+    return  [generate_genome_2(genome_length, min, max) for _ in range(size)]
 
 def fitness(genome: Genome) -> int:
     if len(genome)%2 != 0:
@@ -118,52 +133,6 @@ def run_evolution(
 
     return population, i
 
-def show_board(genome: Genome, board_size: int):
-    board = [['_' for _ in range(board_size)]for _ in range(board_size)]
-    for i in range(0, len(genome), 2):
-        board[genome[i+1]][genome[i]] = 'Q'
-    for line in board:
-        for char in line:
-            print(char, end=" ")
-        print("")
-
-def show_result(genome: Genome, generation: int, board_width: int, queens_number: int):
-    print("result =", genome)
-    print("generation =", generation)
-    show_board(genome, board_width)
-    if fitness(genome) != queens_number * (queens_number - 1) / 2:
-        print("Not a solution, generation limit reached, fitness =", fitness(genome), "/", queens_number * (queens_number - 1) / 2)
-
-def is_num(str):
-    try:
-        int(str)
-    except ValueError:
-        exit(84)
-    return int(str)
-
-def help():
-    print("""python3 main.py B Q P L (M)
-          B = board width
-          Q = number of queens
-          P = size of the population
-          L = generation limit
-          M = mutation chance, 0.1 by default""")
-    
-def input_check(board_width: int, queens_number: int, population: int, gen_lim: int):
-    if board_width < 1:
-        print("Board too small", file=stderr)
-        exit(84)
-    if queens_number < 1:
-        print("Not enough queens", file=stderr)
-        exit(84)
-    if population < 2:
-        print("Population too small", file=stderr)
-        exit(84)
-    if gen_lim < 1:
-        print("Not enough generations", file=stderr)
-        exit(84)
-    if queens_number > board_width:
-        print("I mean.. you can try...")
 
 def main():
     if (len(argv) == 2 and argv[1] == "-h" or len(argv) < 5):
@@ -190,7 +159,7 @@ def main():
         ),
         generation_limit=generation_limit
     )
-    show_result(population[0], generations, board_width, queens_number)
+    show_result(population[0], generations, board_width, queens_number, fitness(population[0]))
     return
 
 main()
