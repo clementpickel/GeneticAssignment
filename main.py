@@ -142,11 +142,12 @@ def is_num(str):
     return int(str)
 
 def help():
-    print("""python3 main.py B Q P L
+    print("""python3 main.py B Q P L (M)
           B = board width
           Q = number of queens
           P = size of the population
-          L = generation limit""")
+          L = generation limit
+          M = mutation chance, 0.1 by default""")
     
 def input_check(board_width: int, queens_number: int, population: int, gen_lim: int):
     if board_width < 1:
@@ -165,13 +166,16 @@ def input_check(board_width: int, queens_number: int, population: int, gen_lim: 
         print("I mean.. you can try...")
 
 def main():
-    if (len(argv) == 2 and argv[1] == "-h" or len(argv) != 5):
+    if (len(argv) == 2 and argv[1] == "-h" or len(argv) < 5):
         help()
         return
     board_width = is_num(argv[1])
     queens_number = is_num(argv[2])
     size = is_num(argv[3])
     generation_limit = is_num(argv[4])
+    mut_chance = 0.1
+    if len(argv) >= 6:
+        mut_chance = float(argv[5])
 
     input_check(board_width, queens_number, size, generation_limit)
 
@@ -182,7 +186,7 @@ def main():
         fitness_func=fitness,
         fitness_limit=queens_number * (queens_number - 1) / 2, # summ from 0 to queens_number,
         mutation_func=partial(
-            mutation, min = 0, max = board_width - 1
+            mutation, min = 0, max = board_width - 1, probability=mut_chance
         ),
         generation_limit=generation_limit
     )
