@@ -51,6 +51,10 @@ For the N-Queens problem, each genome is represented as a list of `[X, Y]` pairs
 - [Checking for horizontal, vertical and diagonal pairs given coordinates](https://stackoverflow.com/questions/41432956/checking-for-horizontal-vertical-and-diagonal-pairs-given-coordinates)
 - [Solving the 8-Queens Problem using Genetic Algorithm](https://www.educative.io/answers/solving-the-8-queen-problem-using-genetic-algorithm)
 
+## Overleaf report
+
+[Overleaf report](https://www.overleaf.com/read/yrdgkhtvqkqp#38da64)
+
 ## Steps Taken
 
 1. Changed genome representation from binary positions to `[X, Y]` coordinates for more intuitive handling of queen positions.

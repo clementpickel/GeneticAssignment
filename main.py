@@ -122,6 +122,7 @@ def run_evolution(
       mutation_func: MutationFunc = mutation,
       generation_limit: int = 100
 ) -> Tuple[Population, int]:
+    breacked = False
     population = populate_func()
 
     for i in range(generation_limit):
@@ -129,6 +130,7 @@ def run_evolution(
         population = sort_fitness(population)
         if population[0][1] >= fitness_limit:
             population = get_population(population)
+            breacked = True
             break
 
         next_generation = [population[0][0], population[1][0]] # elitism
@@ -142,11 +144,12 @@ def run_evolution(
         
         population = next_generation
     
-    population = sorted(
-        population,
-        key=lambda genome: fitness_func(genome),
-        reverse=True
-    )
+    if not breacked:
+        population = sorted(
+            population,
+            key=lambda genome: fitness_func(genome),
+            reverse=True
+        )
 
     return population, i
 
