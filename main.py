@@ -157,7 +157,6 @@ def run_evolution(
 
     return population, i
 
-
 def main():
     start_time = time()
     if (len(argv) == 2 and argv[1] == "-h" or len(argv) < 5):
