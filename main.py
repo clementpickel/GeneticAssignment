@@ -136,9 +136,8 @@ def run_evolution(
 
         next_generation = [population[0][0], population[1][0]] # elitism
 
-        if len(population) > 20: # immigration
-            immigrate=populate_func(size=2)
-            next_generation += immigrate
+        if len(population) > 20: 
+            next_generation += populate_func(size=2) # immigration
 
         for _ in range(int(len(population) / 2) - 2 if len(population) > 20 else 1):
             parent = selection_func(population)

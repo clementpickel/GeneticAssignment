@@ -4,7 +4,7 @@ from typing import List
 Genome = List[int]
 
 def show_board(genome: Genome, board_size: int):
-    board = [['_' for _ in range(board_size)]for _ in range(board_size)]
+    board = [['.' for _ in range(board_size)]for _ in range(board_size)]
     for i in range(0, len(genome), 2):
         board[genome[i+1]][genome[i]] = 'Q'
     for line in board:
