@@ -136,7 +136,11 @@ def run_evolution(
 
         next_generation = [population[0][0], population[1][0]] # elitism
 
-        for _ in range(int(len(population) / 2) - 1):
+        if len(population) > 20: # immigration
+            immigrate=populate_func(size=2)
+            next_generation += immigrate
+
+        for _ in range(int(len(population) / 2) - 2 if len(population) > 20 else 1):
             parent = selection_func(population)
             offsping_a, offspring_b = crossover_func(parent[0], parent[1])
             offsping_a = mutation_func(offsping_a)
