@@ -13,11 +13,23 @@ To run the genetic algorithm:
 ```bash
 python3 main.py -h
 python3 main.py B Q P L (M)
-          B = board width
-          Q = number of queens
-          P = size of the population
-          L = generation limit
-          M = mutation chance, 0.1 by default
+      B = board width
+      Q = number of queens
+      P = size of the population
+      L = generation limit
+      M = mutation chance, 0.1 by default
+```
+
+To compare our genetic algorithm to other methods of solving the N-queens problem we add a bruteforce ans a backtracking algorithm
+
+```bash
+python3 bruteforce.py N
+      N = number of queens and width of the board
+```
+
+```bash
+python3 backtracking.py N
+      N = number of queens and width of the board
 ```
 
 ## Problem Details

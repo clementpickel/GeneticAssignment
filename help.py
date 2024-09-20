@@ -5,8 +5,8 @@ Genome = List[int]
 
 def show_board(genome: Genome, board_size: int):
     board = [['.' for _ in range(board_size)]for _ in range(board_size)]
-    for i in range(0, len(genome), 2):
-        board[genome[i+1]][genome[i]] = 'Q'
+    for i in range(0, len(genome)):
+        board[genome[i]][i] = 'Q'
     for line in board:
         for char in line:
             print(char, end=" ")
@@ -29,17 +29,13 @@ def is_num(str):
     return int(str)
 
 def help():
-    print("""python3 main.py B Q P L (M)
-          B = board width
-          Q = number of queens
+    print("""python3 main.py Q P L (M)
+          Q = number of queens and board_width
           P = size of the population
           L = generation limit
           M = mutation chance, 0.1 by default""")
     
-def input_check(board_width: int, queens_number: int, population: int, gen_lim: int):
-    if board_width < 1:
-        print("Board too small", file=stderr)
-        exit(84)
+def input_check(queens_number: int, population: int, gen_lim: int):
     if queens_number < 1:
         print("Not enough queens", file=stderr)
         exit(84)
@@ -49,6 +45,3 @@ def input_check(board_width: int, queens_number: int, population: int, gen_lim: 
     if gen_lim < 1:
         print("Not enough generations", file=stderr)
         exit(84)
-    if queens_number > board_width:
-        # exit(84)
-        print("I mean.. you can try...")
