@@ -6,7 +6,7 @@ Genome = List[int]
 def show_board(genome: Genome, board_size: int):
     board = [['.' for _ in range(board_size)]for _ in range(board_size)]
     for i in range(0, len(genome)):
-        board[genome[i]][i] = 'Q'
+        board[i][genome[i]] = 'Q'
     for line in board:
         for char in line:
             print(char, end=" ")
