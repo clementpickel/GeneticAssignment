@@ -1,5 +1,5 @@
 from time import time
-from main import run_evolution, generate_population, fitness, mutation 
+from genetic import run_evolution, generate_population, fitness, mutation 
 from functools import partial
 
 test_arg = [
