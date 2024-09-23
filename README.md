@@ -32,6 +32,12 @@ python3 backtracking.py N
       N = number of queens and width of the board
 ```
 
+To test our genetic algorithm and generate a graph you can edit test.py and launch it
+
+```bash
+python3 test.py
+```
+
 ## Problem Details
 
 ### Genome Representation

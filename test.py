@@ -5,41 +5,14 @@ from functools import partial
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from PIL import Image
+import concurrent.futures
 
-test_arg = [
-    # [1, 1, 100, 100, 0.1],
-    # [1, 2, 50, 2000, 0.1],
-    [5, 5, 50, 2000, 0.1],
-    [5, 5, 50, 2000, 0.1],
-    [5, 5, 50, 2000, 0.1],
-    [5, 5, 50, 2000, 0.1],
-    [5, 5, 50, 2000, 0.1],
-    [6, 6, 50, 2000, 0.1],
-    [6, 6, 50, 2000, 0.1],
-    [6, 6, 50, 2000, 0.1],
-    [6, 6, 50, 2000, 0.1],
-    [6, 6, 50, 2000, 0.1],
-    [7, 7, 50, 2000, 0.1],
-    [7, 7, 50, 2000, 0.1],
-    [7, 7, 50, 2000, 0.1],
-    [7, 7, 50, 2000, 0.1],
-    [7, 7, 50, 2000, 0.1],
-    [8, 8, 50, 2000, 0.1],
-    [8, 8, 50, 2000, 0.1],
-    [8, 8, 50, 2000, 0.1],
-    [8, 8, 50, 2000, 0.1],
-    [8, 8, 50, 2000, 0.1],
-    [9, 9, 50, 5000, 0.1],
-    [9, 9, 50, 5000, 0.1],
-    [9, 9, 50, 5000, 0.1],
-    [9, 9, 50, 5000, 0.1],
-    [9, 9, 50, 5000, 0.1],
-    [10, 10, 50, 10000, 0.1],
-    [10, 10, 50, 10000, 0.1],
-    [10, 10, 50, 10000, 0.1],
-    [10, 10, 50, 10000, 0.1],
-    [10, 10, 50, 10000, 0.1],
-]
+test_arg = []
+
+for i in range(5, 15):
+    for _ in range(10):
+        test_arg.append([i, i, 50, i*2000, 0.1])
+
 n = []
 n_time = []
 
@@ -69,36 +42,45 @@ def show_res(res):
         print(elem)
 
 def plot_progress_chart():
-  rand_dict = {}
+  plt.plot(n, n_time, label='Time to solve', color='b', marker='o', linestyle='None')  # 'b' for blue, 'o' for markers
 
-  # plot graph
-  plt.plot(n, n_time, label='Time to solve', color='b', marker='o')  # 'b' for blue, 'o' for markers
-
-  # Adding labels and title
   plt.xlabel('Number of queens')
   plt.ylabel('Time to solve')
-  plt.title('Average Distance between Two Points')
+  plt.title('Time to solve the N-queens problem')
 
-  # Adding a grid for better readability
   plt.grid(True)
 
-  # Displaying the legend
   plt.legend()
 
-  # Save the plot as a PNG image
-  fileName = "TimeChart"+ str(time()) +".png"
+  fileName = "TimeChart"+ str(int(time())) +".png"
   plt.savefig(fileName, format='png')
 
-  # Display the graph
   # plt.show()
 
+# def run_test():
+#     total_success = 0
+#     for elem in test_arg:
+#         success, generations, elapsed__time, genome = test(elem[0], elem[1], elem[2], elem[3], elem[4])
+#         total_success += 1 if success else 0
+#         print(success, generations, elapsed__time, genome)
+#     print(f"{total_success / len(test_arg) * 100:.1f}% of success")
+#     plot_progress_chart()
+
+
 def run_test():
-    res = []
-    for elem in test_arg:
+    total_success = 0
+
+    def run_single_test(elem):
         success, generations, elapsed__time, genome = test(elem[0], elem[1], elem[2], elem[3], elem[4])
         print(success, generations, elapsed__time, genome)
-        # res.append[success, generations, elapsed__time, genome]
-    show_res(res)
+        return success
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        results = list(executor.map(run_single_test, test_arg))
+
+    total_success = sum(1 for result in results if result)
+
+    print(f"{total_success / len(test_arg) * 100:.1f}% of success")
     plot_progress_chart()
 
 run_test()
