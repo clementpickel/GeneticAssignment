@@ -2,10 +2,6 @@
 
 from typing import List, Callable, Tuple
 from random import choices, randint, randrange, random
-from sys import argv
-from time import time
-
-from help import help, show_result, is_num, input_check
 
 Genome = List[int]
 Population = List[Genome]
@@ -85,11 +81,11 @@ def run_evolution(
 ) -> Tuple[Population, int]:
     breacked = False
     population = populate_func()
-    old_fitness = 0
-    turn_with_same_fitness = 0
+    # old_fitness = 0
+    # turn_with_same_fitness = 0
 
     for i in range(generation_limit):
-        population = create_fitness(population)
+        population = create_fitness(population) # go from [[int]] to [[[int], int]], bad practice
         population = sort_fitness(population)
 
         if population[0][1] >= fitness_limit:
@@ -97,16 +93,16 @@ def run_evolution(
             breacked = True
             break
         
-        if old_fitness == population[0][1]:
-            turn_with_same_fitness += 1
-        else :
-            old_fitness = population[0][1]
-            turn_with_same_fitness = 0
+        # if old_fitness == population[0][1]:
+        #     turn_with_same_fitness += 1
+        # else :
+        #     old_fitness = population[0][1]
+        #     turn_with_same_fitness = 0
         
-        if turn_with_same_fitness >= int(0.25 * generation_limit): # if fitness doens't change for 25% of gen: stop
-            population = get_population(population)                # decrease success rate by ~10%
-            breacked = True
-            break
+        # if turn_with_same_fitness >= int(0.25 * generation_limit): # if fitness doens't change for 25% of gen: stop
+        #     population = get_population(population)                # decrease success rate by ~10%
+        #     breacked = True
+        #     break
         
         next_generation = [population[0][0], population[1][0]] # elitism
 

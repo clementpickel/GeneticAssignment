@@ -3,7 +3,7 @@ from sys import argv
 from functools import partial
 from help import is_num, input_check, show_result
 from genetic import run_evolution, generate_population, fitness, mutation 
-from PIL import Image
+# from PIL import Image
 
 def main():
     start_time = time()

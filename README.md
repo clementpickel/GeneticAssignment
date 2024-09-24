@@ -6,6 +6,16 @@ This project implements a genetic algorithm to solve various problems such as th
 
 - **Python 3.x**
 
+# For test.py
+
+- **Pillow**
+- **Matplotlib**
+
+```bash
+pip install pillow
+pip install maplotlib
+```
+
 ## How to Run
 
 To run the genetic algorithm:
