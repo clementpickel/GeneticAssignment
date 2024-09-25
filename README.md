@@ -6,7 +6,7 @@ This project implements a genetic algorithm to solve various problems such as th
 
 - **Python 3.x**
 
-# For test.py
+### For test.py
 
 - **Pillow**
 - **Matplotlib**
