@@ -1,3 +1,5 @@
+Please read the README.md "Requirements" and "How to run" before starting.
+
 For main.py with arguments 12 queens, a population of 50 and max 20 000 generations
 
 python3 main.py 12 50 20000
@@ -117,3 +119,19 @@ Q . . . . . . . . . . . . . .
 . . . . . . . . Q . . . . . .
 . . . . . . Q . . . . . . . .
 . . . . . . . . . . . Q . . .
+
+bruteforce:
+python3 bruteforce.py 12
+Solution found in 3.619544506072998 s :
+Q . . . . . . . . . . .
+. . Q . . . . . . . . .
+. . . . Q . . . . . . .
+. . . . . . . Q . . . .
+. . . . . . . . . Q . .
+. . . . . . . . . . . Q
+. . . . . Q . . . . . .
+. . . . . . . . . . Q .
+. Q . . . . . . . . . .
+. . . . . . Q . . . . .
+. . . . . . . . Q . . .
+. . . Q . . . . . . . .

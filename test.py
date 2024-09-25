@@ -8,6 +8,7 @@ import concurrent.futures
 test_start = 4
 test_end = 9
 test_iteration = 10
+
 test_arg = []
 
 time_chart_n = []
@@ -68,7 +69,7 @@ def plot_chart(x: List[int], y: List[int], title: str, xlabel: str, ylabel: str,
 
     # plt.show()
 
-# def run_test():
+# def run_test(): # old run_test with no multithreading
 #     total_success = 0
 #     for elem in test_arg:
 #         success, generations, elapsed__time, genome = test(elem[0], elem[1], elem[2], elem[3], elem[4])
