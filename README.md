@@ -1,6 +1,6 @@
 # GeneticAssignment
 
-This project implements a genetic algorithm to solve various problems such as the N-Queens problem, Traveling Salesman Problem (TSP), or any similar optimization problem. The genome representation in this case is defined as `[X, Y]` pairs for each queen on the board, where each pair denotes the position of a queen on the chessboard.
+This project implements a genetic algorithm to solve various problems such as the N-Queens problem, Traveling Salesman Problem (TSP), or any similar optimization problem. The genome representation in this case is defined as `[Y, ...]` for each queen on the board, where each Y denotes the position of a queen on the chessboard and it's index in the list is it's X.
 
 ## Requirements
 

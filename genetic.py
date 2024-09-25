@@ -32,7 +32,7 @@ def fitness(genome: Genome) -> int:
 def selection_pair(population) -> Population:
     return get_population(choices(
         population=population,
-        weights=[genome[1]**3 for genome in population],
+        weights=[genome[1] for genome in population],
         k=2
     ))
 
@@ -99,15 +99,15 @@ def run_evolution(
         #     old_fitness = population[0][1]
         #     turn_with_same_fitness = 0
         
-        # if turn_with_same_fitness >= int(0.25 * generation_limit): # if fitness doens't change for 25% of gen: stop
+        # if turn_with_same_fitness >= int(0.15 * generation_limit): # if fitness doens't change for 15% of gen: stop
         #     population = get_population(population)                # decrease success rate by ~10%
         #     breacked = True
         #     break
         
-        next_generation = [population[0][0], population[1][0]] # elitism
+        next_generation = [population[0][0], population[1][0]] # elitism, keep the best 2 for the next generatoin
 
         if len(population) > 20: 
-            next_generation += populate_func(size=2) # immigration
+            next_generation += populate_func(size=2) # immigration, inroduce 2 new random genome
 
         for _ in range(int(len(population) / 2) - 2 if len(population) > 20 else 1):
             parent = selection_func(population)
