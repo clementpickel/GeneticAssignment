@@ -1,3 +1,10 @@
+# Group 4
+# Clément Pickel
+# Célian Friedrich
+# Punnoose K. Thomas
+# Sneha Mathummal Parapurath
+# Deepa Krishnan
+
 from time import time
 from sys import argv
 from functools import partial

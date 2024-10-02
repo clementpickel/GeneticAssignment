@@ -36,7 +36,7 @@ def help():
           M = mutation chance, 0.1 by default""")
     
 def input_check(queens_number: int, population: int, gen_lim: int):
-    if queens_number < 1:
+    if queens_number < 4:
         print("Not enough queens", file=stderr)
         exit(84)
     if population < 2:
