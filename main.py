@@ -23,7 +23,6 @@ def main():
     mut_chance = 0.1
     if len(argv) >= 5:
         mut_chance = float(argv[4])
-    print(mut_chance)
 
     input_check(queens_number, size, generation_limit)
 
