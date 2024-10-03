@@ -100,7 +100,7 @@ def run_evolution(
         #     turn_with_same_fitness = 0
         
         # if turn_with_same_fitness >= int(0.15 * generation_limit): # if fitness doens't change for 15% of gen: stop
-        #     population = get_population(population)                # decrease success rate by ~10%
+        #     population = get_population(population)                # greatly decrease success rate for large N so we removed it
         #     breacked = True
         #     break
         

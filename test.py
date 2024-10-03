@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import concurrent.futures
 
 test_start = 4
-test_end = 25
+test_end = 16
 mutation_rate = 0.1
 test_iteration = 10
 
@@ -22,7 +22,7 @@ for i in range(test_start, test_end):
     success_rate_chart_x.append(i)
     success_rate_chart_y.append(0)
     for _ in range(test_iteration):
-        test_arg.append([i, 50, i*2000, mutation_rate])
+        test_arg.append([i, 50, i**2*100, mutation_rate])
 
 def test(queens_number, size, generation_limit, mut_chance):
     start_time = time()

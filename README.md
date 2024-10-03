@@ -22,8 +22,7 @@ To run the genetic algorithm:
 
 ```bash
 python3 main.py -h
-python3 main.py B Q P L (M)
-      B = board width
+python3 main.py Q P L (M)
       Q = number of queens
       P = size of the population
       L = generation limit
