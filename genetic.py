@@ -28,11 +28,11 @@ def fitness(genome: Genome) -> int:
             if y1 != y2 and y2 - y1 != x2 - x1 and y2 - y1 != x1 - x2: # check vertical and diagonals
                 score += 1
     return score
-            
+
 def selection_pair(population) -> Population:
     return get_population(choices(
         population=population,
-        weights=[genome[1] for genome in population],
+        weights=[pair[1] for pair in population],
         k=2
     ))
 
@@ -115,7 +115,7 @@ def run_evolution(
             offsping_a = mutation_func(offsping_a)
             offspring_b = mutation_func(offspring_b)
             next_generation += [offsping_a, offspring_b]
-        
+
         population = next_generation
     
     if not breacked:

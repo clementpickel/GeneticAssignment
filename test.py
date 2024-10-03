@@ -18,11 +18,11 @@ time_chart_n_time = []
 success_rate_chart_x = []
 success_rate_chart_y = []
 
-for i in range(test_start, test_end):
-    success_rate_chart_x.append(i)
+for N in range(test_start, test_end):
+    success_rate_chart_x.append(N)
     success_rate_chart_y.append(0)
     for _ in range(test_iteration):
-        test_arg.append([i, 50, i**2*100, mutation_rate])
+        test_arg.append([N, 50, N**2*100, mutation_rate])
 
 def test(queens_number, size, generation_limit, mut_chance):
     start_time = time()
@@ -67,8 +67,13 @@ def plot_chart(x: List[int], y: List[int], title: str, xlabel: str, ylabel: str,
     fileName = ShortFileName + str(int(time())) +".png"
     plt.savefig(fileName, format='png')
 
-
     # plt.show()
+
+def compute_success_rate() -> List[int]:
+    res = []
+    for elem in success_rate_chart_y:
+        res.append(elem / test_iteration * 100)
+    return res
 
 # def run_test(): # old run_test with no multithreading
 #     total_success = 0
@@ -78,12 +83,6 @@ def plot_chart(x: List[int], y: List[int], title: str, xlabel: str, ylabel: str,
 #         print(success, generations, elapsed__time, genome)
 #     print(f"{total_success / len(test_arg) * 100:.1f}% of success")
 #     plot_progress_chart()
-
-def compute_success_rate() -> List[int]:
-    res = []
-    for elem in success_rate_chart_y:
-        res.append(elem / test_iteration * 100)
-    return res
 
 def run_test():
     total_success = 0
